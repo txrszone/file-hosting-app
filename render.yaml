@@ -1,8 +1,10 @@
+runtime: python-3.10
+
 services:
   - type: web
     name: filehost-backend
     runtime: node
-    runtimeVersion: 20
+    runtimeVersion: 18
     buildCommand: cd backend && npm install && npm run build
     startCommand: cd backend && npm run start
     envVars:
@@ -29,11 +31,23 @@ services:
   - type: web
     name: filehost-frontend
     runtime: node
-    runtimeVersion: 20
+    runtimeVersion: 18
     buildCommand: cd frontend && npm install && npm run build
     startCommand: cd frontend && npm run start
     envVars:
       - key: NEXT_PUBLIC_API_URL
+        fromService:
+          name: filehost-backend
+          property: url
+
+databases:
+  - name: filehost-db
+    engine: postgres
+    version: 15
+
+redis:
+  - name: filehost-redis
+    plan: free
         fromService:
           name: filehost-backend
           property: url
